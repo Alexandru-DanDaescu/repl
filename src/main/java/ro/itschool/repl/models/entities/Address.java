@@ -1,5 +1,6 @@
 package ro.itschool.repl.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "street")
     private String street;
@@ -32,4 +33,8 @@ public class Address {
 
     @Column(name = "country")
     private String country;
+
+    @OneToOne(mappedBy = "address")
+    @JsonIgnore
+    private Property property;
 }
