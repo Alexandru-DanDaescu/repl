@@ -37,4 +37,8 @@ public class Address {
     @OneToOne(mappedBy = "address")
     @JsonIgnore
     private Property property;
+
+    @OneToOne(mappedBy = "address")
+    @JsonIgnore
+    private Client client;
 }

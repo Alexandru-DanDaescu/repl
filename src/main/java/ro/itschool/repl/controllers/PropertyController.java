@@ -1,6 +1,7 @@
 package ro.itschool.repl.controllers;
 
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.itschool.repl.models.dtos.PropertyDTO;
@@ -20,7 +21,7 @@ public class PropertyController {
 
     @PostMapping("/properties")
     public ResponseEntity<PropertyDTO> createProperty(@RequestBody @Valid PropertyDTO propertyDTO){
-        return ResponseEntity.ok(propertyService.createProperty(propertyDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.createProperty(propertyDTO));
     }
 
     @GetMapping("/properties")
