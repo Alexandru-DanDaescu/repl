@@ -1,5 +1,6 @@
 package ro.itschool.repl.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.Setter;
 import ro.itschool.repl.enums.Utilities;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter
@@ -44,4 +47,8 @@ public class Property {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address")
     private Address address;
+
+    @ManyToMany(mappedBy = "properties")
+    @JsonIgnore
+    private Set<Client> clients = new HashSet<>();
 }

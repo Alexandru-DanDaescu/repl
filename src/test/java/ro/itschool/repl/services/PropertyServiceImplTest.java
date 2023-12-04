@@ -46,23 +46,7 @@ class PropertyServiceImplTest {
     @Test
     @DisplayName("Property created successfully")
     void createProperty(){
-        AddressDTO addressDTO = new AddressDTO();
-        addressDTO.setId(1L);
-        addressDTO.setStreet("street");
-        addressDTO.setCity("city");
-        addressDTO.setPostalCode("4325234");
-        addressDTO.setCounty("county");
-        addressDTO.setCountry("country");
-
-        PropertyDTO propertyDTO = new PropertyDTO();
-        propertyDTO.setId(1L);
-        propertyDTO.setSquareFootage(23.45);
-        propertyDTO.setPropertyType("typeHere");
-        propertyDTO.setSalesPrice(234.423);
-        propertyDTO.setDaysOnTheMarket((short) 34);
-        propertyDTO.setYearBuilt(LocalDate.parse("2020-12-03"));
-        propertyDTO.setUtilitiesStatus(Utilities.GOOD);
-        propertyDTO.setAddress(addressDTO);
+        PropertyDTO propertyDTO = getPropertyDTO();
 
         Address address = new Address();
         address.setId(1L);
@@ -102,6 +86,8 @@ class PropertyServiceImplTest {
         assertEquals(propertyDTO, savedPropertyDTO);
     }
 
+
+
     @Test
     @DisplayName("Properties retrieved successfully")
     void getProperties(){
@@ -133,23 +119,7 @@ class PropertyServiceImplTest {
     @DisplayName("Property successfully updated")
     void updateProperty(){ //Test result is incorrect because it can't find the property id.
 
-        AddressDTO addressDTO = new AddressDTO();
-        addressDTO.setId(1L);
-        addressDTO.setStreet("street");
-        addressDTO.setCity("city");
-        addressDTO.setPostalCode("4325234");
-        addressDTO.setCounty("county");
-        addressDTO.setCountry("country");
-
-        PropertyDTO propertyDTO = new PropertyDTO();
-        propertyDTO.setId(1L);
-        propertyDTO.setSquareFootage(23.45);
-        propertyDTO.setPropertyType("typeHere");
-        propertyDTO.setSalesPrice(234.423);
-        propertyDTO.setDaysOnTheMarket((short) 34);
-        propertyDTO.setYearBuilt(LocalDate.parse("2020-12-03"));
-        propertyDTO.setUtilitiesStatus(Utilities.GOOD);
-        propertyDTO.setAddress(addressDTO);
+        PropertyDTO propertyDTO = getPropertyDTO();
 
         PropertyDTO updatedPropertyDTO = new PropertyDTO();
         updatedPropertyDTO.setId(propertyDTO.getId());
@@ -177,5 +147,24 @@ class PropertyServiceImplTest {
         verify(propertyRepository, times(1)).delete(property);
     }
 
+    private static PropertyDTO getPropertyDTO() {
+        AddressDTO addressDTO = new AddressDTO();
+        addressDTO.setId(1L);
+        addressDTO.setStreet("street");
+        addressDTO.setCity("city");
+        addressDTO.setPostalCode("4325234");
+        addressDTO.setCounty("county");
+        addressDTO.setCountry("country");
 
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setId(1L);
+        propertyDTO.setSquareFootage(23.45);
+        propertyDTO.setPropertyType("typeHere");
+        propertyDTO.setSalesPrice(234.423);
+        propertyDTO.setDaysOnTheMarket((short) 34);
+        propertyDTO.setYearBuilt(LocalDate.parse("2020-12-03"));
+        propertyDTO.setUtilitiesStatus(Utilities.GOOD);
+        propertyDTO.setAddress(addressDTO);
+        return propertyDTO;
+    }
 }

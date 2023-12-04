@@ -31,6 +31,7 @@ public class PropertyServiceImpl implements PropertyService{
     }
     @Override
     public PropertyDTO createProperty(PropertyDTO propertyDTO) {
+
         Property property = objectMapper.convertValue(propertyDTO, Property.class);
 
         if(property.getAddress() != null){
@@ -48,14 +49,14 @@ public class PropertyServiceImpl implements PropertyService{
            List<Property> propertyList = propertyRepository.findAll();
            List<PropertyDTO> propertyDTOList = new ArrayList<>();
 
-       for(Property property : propertyList){
-           propertyDTOList.add(convertToDTO(property));
-       }
+           for(Property property : propertyList){
+               propertyDTOList.add(convertToDTO(property));
+           }
 
-       if (propertyDTOList.isEmpty()){
-           throw new PropertyNotFoundException("Properties cannot be found because they do not exist.");
-       }
-       return propertyDTOList;
+           if (propertyDTOList.isEmpty()){
+               throw new PropertyNotFoundException("Properties cannot be found because they do not exist.");
+           }
+           return propertyDTOList;
        } catch (PropertyNotFoundException e){
            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
        }
@@ -80,12 +81,16 @@ public class PropertyServiceImpl implements PropertyService{
 
     @Override
     public void deleteProperty(Long id) {
-        Property property = propertyRepository.findById(id)
-                .orElseThrow(() -> new PropertyNotFoundException("Property with id: " + id + " cannot be deleted because it is not found"));
-        propertyRepository.delete(property);
+        try {
+            Property property = propertyRepository.findById(id)
+                    .orElseThrow(() -> new PropertyNotFoundException("Property with id: " + id + " cannot be deleted because it is not found"));
+            propertyRepository.delete(property);
+        } catch (PropertyNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
-    public Property updatePropertyValues(Property property, PropertyDTO propertyDTO){
+    private Property updatePropertyValues(Property property, PropertyDTO propertyDTO){
         property.setSquareFootage(propertyDTO.getSquareFootage());
         property.setPropertyType(propertyDTO.getPropertyType());
         property.setSalesPrice(propertyDTO.getSalesPrice());
