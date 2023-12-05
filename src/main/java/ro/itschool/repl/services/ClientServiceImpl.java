@@ -5,19 +5,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ro.itschool.repl.enums.Utilities;
 import ro.itschool.repl.exceptions.ClientNotFoundException;
 import ro.itschool.repl.exceptions.ClientUpdateException;
 import ro.itschool.repl.exceptions.PropertyNotFoundException;
 import ro.itschool.repl.models.dtos.ClientDTO;
+import ro.itschool.repl.models.dtos.PropertyDTO;
 import ro.itschool.repl.models.entities.Address;
 import ro.itschool.repl.models.entities.Client;
 import ro.itschool.repl.models.entities.Property;
 import ro.itschool.repl.repositories.AddressRepository;
 import ro.itschool.repl.repositories.ClientRepository;
 import ro.itschool.repl.repositories.PropertyRepository;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -48,6 +52,14 @@ public class ClientServiceImpl implements ClientService{
         clientRepository.save(savedClientEntity);
 
         return objectMapper.convertValue(savedClientEntity, ClientDTO.class);
+    }
+
+    @Override
+    public List<PropertyDTO> sortClientProperties(Long clientId, Utilities utilitiesStatus, String propertyType, LocalDate yearBuilt) {
+        return clientRepository.sortClientPropertiesByUtilitiesStatusPropertyTypeAndYearBuilt(clientId,utilitiesStatus,propertyType,yearBuilt)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
     @Override
@@ -102,6 +114,9 @@ public class ClientServiceImpl implements ClientService{
         return objectMapper.convertValue(client, ClientDTO.class);
     }
 
+    private PropertyDTO convertToDTO(Property property){
+        return  objectMapper.convertValue(property, PropertyDTO.class);
+    }
     private Client updateClientValues(Client client, ClientDTO clientDTO){
         client.setFullName(clientDTO.getFullName());
         client.setAge(clientDTO.getAge());
