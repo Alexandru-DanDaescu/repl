@@ -1,5 +1,6 @@
 package ro.itschool.repl.controllers;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,9 +92,9 @@ class PropertyControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].squareFootage").value(propertyDTO.getSquareFootage()))
                 .andExpect(jsonPath("$[0].propertyType").value(propertyDTO.getPropertyType()))
                 .andExpect(jsonPath("$[0].salesPrice").value(propertyDTO.getSalesPrice()))
-                .andExpect(jsonPath("$[0].daysOnTheMarket").value(propertyDTO.getDaysOnTheMarket()))
-                .andExpect(jsonPath("$[0].yearBuilt").value(propertyDTO.getYearBuilt()))
-                .andExpect(jsonPath("$[0].utilitiesStatus").value(propertyDTO.getUtilitiesStatus()))
+                .andExpect(jsonPath("$[0].daysOnTheMarket", Matchers.equalTo(Integer.valueOf(propertyDTO.getDaysOnTheMarket()))))
+                .andExpect(jsonPath("$[0].yearBuilt").value(propertyDTO.getYearBuilt().toString()))
+                .andExpect(jsonPath("$[0].utilitiesStatus").value(propertyDTO.getUtilitiesStatus().toString()))
                 .andExpect(jsonPath("$[0].address.street").value(propertyDTO.getAddress().getStreet()))
                 .andExpect(jsonPath("$[0].address.city").value(propertyDTO.getAddress().getCity()))
                 .andExpect(jsonPath("$[0].address.postalCode").value(propertyDTO.getAddress().getPostalCode()))

@@ -12,8 +12,9 @@ import ro.itschool.repl.models.dtos.AddressDTO;
 import ro.itschool.repl.models.dtos.ClientDTO;
 import ro.itschool.repl.services.ClientService;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import java.util.Arrays;
+
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,14 +45,14 @@ class ClientControllerIntegrationTest {
                          "postalCode" : "456234",
                          "county" : "West",
                          "country" : "North"
-                     },
-                     "properties": [1]
+                     }
                   }
                 """;
         ClientDTO mockClientDTO = createClientDTO();
 
-        given(clientService.createClientAndAddPropertyToFavorites(eq(1L),any(ClientDTO.class))).willReturn(mockClientDTO);
-        mockMvc.perform(post("/clients/1/properties")
+        given(clientService.createClientAndAddPropertyToFavorites(argThat(array -> Arrays.equals(array, new Long[]{1L, 2L, 3L})), any(ClientDTO.class)))
+                .willReturn(mockClientDTO);
+        mockMvc.perform(post("/clients/1,2,3/properties")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(clientJson))
                 .andExpect(status().isCreated())

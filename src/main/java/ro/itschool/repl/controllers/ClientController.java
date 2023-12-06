@@ -22,9 +22,9 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @PostMapping("/clients/{propertyId}/properties")
-    public ResponseEntity<ClientDTO> createClientAndAddProperty(@PathVariable Long propertyId, @RequestBody @Valid ClientDTO clientDTO){
-        ClientDTO savedClient = clientService.createClientAndAddPropertyToFavorites(propertyId, clientDTO);
+    @PostMapping("/clients/{propertyIds}/properties")
+    public ResponseEntity<ClientDTO> createClientAndAddProperty(@PathVariable Long[] propertyIds, @RequestBody @Valid ClientDTO clientDTO){
+        ClientDTO savedClient = clientService.createClientAndAddPropertyToFavorites(propertyIds, clientDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedClient);
     }
 
