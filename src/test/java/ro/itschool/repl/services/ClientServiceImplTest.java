@@ -77,7 +77,7 @@ class ClientServiceImplTest {
         when(clientRepository.save(client)).thenReturn(client);
         when(objectMapper.convertValue(client, ClientDTO.class)).thenReturn(clientDTO);
 
-        ClientDTO savedClientDTO = clientServiceImpl.createClientAndAddPropertyToFavorites(propertyId, clientDTO);
+        ClientDTO savedClientDTO = clientServiceImpl.createClientAndAddPropertyToFavorites(new Long[]{propertyId}, clientDTO);
 
         verify(clientRepository, times(2)).save(client);
         verify(propertyRepository, times(1)).save(property);

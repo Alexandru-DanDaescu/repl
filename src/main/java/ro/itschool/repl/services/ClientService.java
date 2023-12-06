@@ -11,7 +11,7 @@ import java.util.Set;
 
 public interface ClientService {
 
-    ClientDTO createClientAndAddPropertyToFavorites(Long propertyId, ClientDTO clientDTO);
+    ClientDTO createClientAndAddPropertyToFavorites(Long[] propertyId, ClientDTO clientDTO);
     List<ClientDTO> getClients();
 
     List<PropertyDTO> sortClientProperties(Long clientId, Utilities utilitiesStatus, String propertyType, LocalDate yearBuilt);

@@ -118,20 +118,20 @@ class PropertyServiceImplTest {
     @Test
     @DisplayName("Property successfully updated")
     void updateProperty(){ //Test result is incorrect because it can't find the property id.
+        Property propertyInDatabase = property();
 
-        PropertyDTO propertyDTO = getPropertyDTO();
+        when(propertyRepository.findById(anyLong())).thenReturn(Optional.of(propertyInDatabase));
 
-        PropertyDTO updatedPropertyDTO = new PropertyDTO();
-        updatedPropertyDTO.setId(propertyDTO.getId());
-        updatedPropertyDTO.setSquareFootage(231.45);
-        updatedPropertyDTO.setPropertyType("new");
-        updatedPropertyDTO.setSalesPrice(23413.683);
-        updatedPropertyDTO.setDaysOnTheMarket((short) 38);
-        updatedPropertyDTO.setYearBuilt(LocalDate.parse("2010-12-03"));
+        PropertyDTO propertyDTOToUpdate = getPropertyDTO();
+        PropertyDTO updatedPropertyDTO = getUpdatedPropertyDTO();
 
-        when(propertyServiceImpl.updateProperty(propertyDTO.getId(),propertyDTO)).thenReturn(updatedPropertyDTO);
+        when(propertyServiceImpl.updateProperty(anyLong(), any())).thenReturn(updatedPropertyDTO);
 
-        assertNotEquals(propertyDTO,updatedPropertyDTO);
+        PropertyDTO resultDTO = propertyServiceImpl.updateProperty(propertyDTOToUpdate.getId(), propertyDTOToUpdate);
+
+        assertNotNull(resultDTO);
+        assertNotEquals(propertyDTOToUpdate, resultDTO);
+        assertEquals(updatedPropertyDTO, resultDTO);
     }
 
     @Test
@@ -157,7 +157,7 @@ class PropertyServiceImplTest {
         addressDTO.setCountry("country");
 
         PropertyDTO propertyDTO = new PropertyDTO();
-        propertyDTO.setId(1L);
+        propertyDTO.setId(7L);
         propertyDTO.setSquareFootage(23.45);
         propertyDTO.setPropertyType("typeHere");
         propertyDTO.setSalesPrice(234.423);
@@ -165,6 +165,49 @@ class PropertyServiceImplTest {
         propertyDTO.setYearBuilt(LocalDate.parse("2020-12-03"));
         propertyDTO.setUtilitiesStatus(Utilities.GOOD);
         propertyDTO.setAddress(addressDTO);
+        return propertyDTO;
+    }
+
+    private static Property property(){
+        Address address = new Address();
+        address.setId(1L);
+        address.setStreet("street");
+        address.setCity("city");
+        address.setPostalCode("4325234");
+        address.setCounty("county");
+        address.setCountry("country");
+
+        Property property = new Property();
+        property.setId(getPropertyDTO().getId());
+        property.setSquareFootage(23.45);
+        property.setPropertyType("typeHere");
+        property.setSalesPrice(234.423);
+        property.setDaysOnTheMarket((short) 34);
+        property.setYearBuilt(LocalDate.parse("2020-12-03"));
+        property.setUtilitiesStatus(Utilities.GOOD);
+        property.setAddress(address);
+        return property;
+    }
+
+    private static PropertyDTO getUpdatedPropertyDTO(){
+        AddressDTO addressDTO = new AddressDTO();
+        addressDTO.setId(1L);
+        addressDTO.setStreet("street");
+        addressDTO.setCity("city");
+        addressDTO.setPostalCode("4325234");
+        addressDTO.setCounty("county");
+        addressDTO.setCountry("country");
+
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setId(7L);
+        propertyDTO.setSquareFootage(232.45);
+        propertyDTO.setPropertyType("typing");
+        propertyDTO.setSalesPrice(23423.423);
+        propertyDTO.setDaysOnTheMarket((short) 94);
+        propertyDTO.setYearBuilt(LocalDate.parse("2025-11-01"));
+        propertyDTO.setUtilitiesStatus(Utilities.BAD);
+        propertyDTO.setAddress(addressDTO);
+
         return propertyDTO;
     }
 }

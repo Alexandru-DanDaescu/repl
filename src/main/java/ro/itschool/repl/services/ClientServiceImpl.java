@@ -40,15 +40,17 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public ClientDTO createClientAndAddPropertyToFavorites(Long propertyId, ClientDTO clientDTO){
-        Property property = propertyRepository.findById(propertyId)
-                .orElseThrow(() -> new PropertyNotFoundException("Property not found."));
+    public ClientDTO createClientAndAddPropertyToFavorites(Long[] propertyIds, ClientDTO clientDTO){
+        List<Property> properties = propertyRepository.findAllById(List.of(propertyIds));
         Client client = objectMapper.convertValue(clientDTO, Client.class);
         Client savedClientEntity = clientRepository.save(client);
 
-        property.getClients().add(savedClientEntity);
-        savedClientEntity.getProperties().add(property);
-        propertyRepository.save(property);
+        for (Property property : properties) {
+            property.getClients().add(savedClientEntity);
+            savedClientEntity.getProperties().add(property);
+            propertyRepository.save(property);
+        }
+
         clientRepository.save(savedClientEntity);
 
         return objectMapper.convertValue(savedClientEntity, ClientDTO.class);
@@ -56,10 +58,15 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public List<PropertyDTO> sortClientProperties(Long clientId, Utilities utilitiesStatus, String propertyType, LocalDate yearBuilt) {
-        return clientRepository.sortClientPropertiesByUtilitiesStatusPropertyTypeAndYearBuilt(clientId,utilitiesStatus,propertyType,yearBuilt)
-                .stream()
-                .map(this::convertToDTO)
-                .toList();
+        if(clientId == null){
+            throw new IllegalArgumentException("Client id cannot be null");
+        }
+        else {
+            return clientRepository.sortClientPropertiesByUtilitiesStatusPropertyTypeAndYearBuilt(clientId, utilitiesStatus, propertyType, yearBuilt)
+                    .stream()
+                    .map(this::convertToDTO)
+                    .toList();
+        }
     }
 
     @Override
