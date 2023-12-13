@@ -11,10 +11,11 @@ The project uses:
 > PostgreSQL
 > Maven
 > Mockito
-> Junit
+> JUnit
 > Lombok
 > Spring Data JPA
 > Hibernate
+
 
 
 
