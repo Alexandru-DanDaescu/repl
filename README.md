@@ -7,7 +7,6 @@ The project uses:
 
 > Java 17
 > SpringBoot 3.1.5
-> PostMan
 > PostgreSQL
 > Maven
 > Mockito
